@@ -1,0 +1,1 @@
+# wspólna konfiguracja testów
