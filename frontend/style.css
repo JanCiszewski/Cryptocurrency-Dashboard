@@ -108,6 +108,15 @@ header {
     gap: 1rem;
 }
 
+.balance {
+    color: #c7c3c3;
+}
+
+.balance span {
+    color: #ffaf36;
+    font-size: 2rem;
+}
+
 .card {
     background-color: #1f1f1f;
     color: white;
