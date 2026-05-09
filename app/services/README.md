@@ -13,20 +13,6 @@ Projekt backendowy umożliwiający:
 Instalacja:
 pip install requests
 
-## Zmienne środowiskowe dla backendu (WAŻNE)
-
-Trzeba ustawić:
-
-PAYU_CLIENT_ID
-PAYU_CLIENT_SECRET
-PAYU_POS_ID
-
-Przykład (Mac/Linux):
-
-export PAYU_CLIENT_ID=xxx
-export PAYU_CLIENT_SECRET=xxx
-export PAYU_POS_ID=xxx
-
 ## Funkcje
 
 ### crypto_service.py
