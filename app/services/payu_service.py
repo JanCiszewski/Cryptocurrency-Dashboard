@@ -1,4 +1,3 @@
-import os
 import uuid
 import requests
 
@@ -6,13 +5,11 @@ PAYU_AUTH_URL = "https://secure.snd.payu.com/pl/standard/user/oauth/authorize"
 PAYU_ORDERS_URL = "https://secure.snd.payu.com/api/v2_1/orders"
 PAYU_ORDER_URL = "https://secure.snd.payu.com/api/v2_1/orders/"
 
-PAYU_CLIENT_ID = os.getenv("PAYU_CLIENT_ID")
-PAYU_CLIENT_SECRET = os.getenv("PAYU_CLIENT_SECRET")
-PAYU_POS_ID = os.getenv("PAYU_POS_ID")
+PAYU_CLIENT_ID = "300746"
+PAYU_CLIENT_SECRET = "2ee86a66e5d97e3fadc400c9f19b065d"
+PAYU_POS_ID = "300746"
 
 def get_payu_token():
-    if not PAYU_CLIENT_ID or not PAYU_CLIENT_SECRET:
-        return {"error": "Brak PAYU_CLIENT_ID lub PAYU_CLIENT_SECRET"}
 
     data = {
         "grant_type": "client_credentials",
@@ -93,9 +90,7 @@ def create_payment(
 
     if not buyer_language or not str(buyer_language).strip():
         return {"error": "Brak buyer_language"}
-    
-    if not PAYU_POS_ID:
-        return {"error": "Brak PAYU_POS_ID"}
+
 
     token_result = get_payu_token()
 
