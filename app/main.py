@@ -1,11 +1,12 @@
 from fastapi import FastAPI
-from app.routers import coins, auth, demo # Dodaliśmy tu auth i demo
+from app.routers import coins, auth, demo
+from app.routers import coins, auth, demo, favorites
+from app.routers import coins, auth, demo, favorites, payments
 
-from fastapi.middleware.cors import CORSMiddleware #potrzebne do fetchowania API we frontendzie
+from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI(title="Crypto Dashboard API")
 
-#usuwanie błędu CORS
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -13,10 +14,11 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Podpinamy wszystkie Twoje routery
 app.include_router(coins.router)
-app.include_router(auth.router)   # Nowe
-app.include_router(demo.router)   # Nowe
+app.include_router(auth.router)
+app.include_router(demo.router)
+app.include_router(favorites.router)
+app.include_router(payments.router)
 
 @app.get("/")
 async def root():

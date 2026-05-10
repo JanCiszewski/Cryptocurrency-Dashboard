@@ -1,20 +1,18 @@
 from fastapi import APIRouter
-from pydantic import BaseModel
+from app.schemas.user import UserCreate, UserResponse, TokenResponse
 
-# Tworzymy router dla sekcji autoryzacji
 router = APIRouter(prefix="/auth", tags=["Autoryzacja"])
 
-# Model danych - czego oczekujemy od użytkownika przy logowaniu
-class LoginData(BaseModel):
-    email: str
-    password: str
+@router.post("/register", response_model=UserResponse)
+async def register(user: UserCreate):
+    # Mock odpowiedzi - tu Auth Guy wepnie bazę danych
+    return {"id": 1, "username": user.username, "role": "user"}
 
-@router.post("/login")
-async def login(data: LoginData):
-    # MOCK: Sztuczny token. Auth Guy podmieni to potem na prawdziwe JWT.
-    return {"access_token": "fake-super-secret-token", "token_type": "bearer"}
+@router.post("/login", response_model=TokenResponse)
+async def login(user: UserCreate):
+    # Mock odpowiedzi - tu Auth Guy wepnie generowanie JWT
+    return {"access_token": "fake-jwt-token", "token_type": "bearer"}
 
-@router.get("/me")
-async def get_current_user():
-    # MOCK: Zwracamy sztuczne dane rzekomo zalogowanego użytkownika
-    return {"id": 1, "username": "alan_tester", "email": "alan@example.com"}
+@router.get("/me", response_model=UserResponse)
+async def get_me():
+    return {"id": 1, "username": "alan_tester", "role": "admin"}
