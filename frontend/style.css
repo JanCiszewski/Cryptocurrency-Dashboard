@@ -84,22 +84,16 @@ header {
     border-radius: 20px;
 }
 
-/* .option-item:active {
-    background-color: #FFA825;
-    color: white;
-    transition: background-color ease-in-out 0.5s;
-    border-radius: 20px;
-} */
-
 .content-wrapper {
     grid-area: main;
     padding: 2rem;
 }
 
 .content {
-    padding: 1rem;
-    background-color: #616161;
-    border-radius: 20px;
+    background-color: #1b1b1b;
+    border-radius: 30px;
+    padding: 2rem;
+    min-height: 90vh;
 }
 
 .cards {
@@ -126,4 +120,168 @@ header {
 
 .card img {
     width: 2rem;
+}
+
+.dashboard-top {
+    margin-bottom: 2rem;
+}
+
+.balance-card {
+    background: linear-gradient(145deg, #242424, #1a1a1a);
+    border-radius: 25px;
+    padding: 2rem;
+    color: white;
+}
+
+.balance-label {
+    color: #8f8f8f;
+    font-size: 0.9rem;
+    letter-spacing: 2px;
+}
+
+.balance-card h2 {
+    font-size: 4rem;
+    margin: 1rem 0;
+    color: #fff;
+}
+
+.balance-card h2 span {
+    color: #FFA825;
+}
+
+.stats {
+    display: flex;
+    gap: 3rem;
+    margin-top: 2rem;
+}
+
+.stat p {
+    color: #8f8f8f;
+    margin-bottom: 0.3rem;
+}
+
+.positive {
+    color: #2ecc71;
+}
+
+.negative {
+    color: #ff5e57;
+}
+
+.dashboard-grid {
+    display: grid;
+    grid-template-columns: 2.4fr 1fr;
+    gap: 2rem;
+    align-items: stretch;
+}
+
+.market-section, .portfolio-section {
+    background-color: #242424;
+    border-radius: 25px;
+    padding: 1.5rem;
+}
+
+.section-title h3 {
+    color: white;
+    margin-bottom: 1.5rem;
+}
+
+.cards {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+}
+
+.card {
+    background: linear-gradient(145deg, #1e1e1e, #151515);
+    border-radius: 20px;
+    padding: 1.3rem;
+    color: white;
+    transition: 0.3s ease;
+    cursor: pointer;
+    border: 1px solid transparent;
+}
+
+.card:hover {
+    transform: translateY(-4px);
+    border-color: #FFA825;
+}
+
+.card h3 {
+    margin: 0;
+    font-size: 1.1rem;
+}
+
+.card p:nth-child(2) {
+    color: #8f8f8f;
+    text-transform: uppercase;
+    margin-top: 0.5rem;
+}
+
+.card p:nth-child(3) {
+    color: #FFA825;
+    font-size: 1.5rem;
+    margin-top: 1rem;
+    font-weight: bold;
+}
+
+.portfolio-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.portfolio-item {
+    display: flex;
+    justify-content: space-between;
+    background-color: #1b1b1b;
+    padding: 1rem;
+    border-radius: 15px;
+    color: white;
+}
+
+.portfolio-item span:last-child {
+    color: #FFA825;
+    font-weight: bold;
+}
+
+.wallet-section {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+}
+
+.wallet-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem;
+}
+
+.wallet-card {
+    background: linear-gradient(145deg, #242424, #1a1a1a);
+    border-radius: 25px;
+    padding: 1.5rem;
+    color: white;
+}
+
+.wallet-card h4 {
+    color: #8f8f8f;
+    margin-bottom: 1rem;
+}
+
+.wallet-balance {
+    font-size: 2rem;
+    font-weight: bold;
+    color: #FFA825;
+}
+
+.wallet-coin {
+    font-size: 1.6rem;
+    font-weight: bold;
+}
+
+.wallet-profit {
+    font-size: 1.8rem;
+    font-weight: bold;
+    color: #2ecc71;
 }

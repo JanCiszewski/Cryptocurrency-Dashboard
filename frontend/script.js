@@ -1,9 +1,17 @@
-import { getCoins } from "./api.js";
-import { renderCoins } from "./ui.js";
+import { loadView } from "./views.js";
 
-async function init() {
-    const coins = await getCoins();
-    renderCoins(coins);
-}
+document.querySelectorAll("[data-view]").forEach(link => {
 
-init();
+    link.addEventListener("click", (e) => {
+
+        e.preventDefault();
+
+        const view = link.dataset.view;
+
+        loadView(view);
+
+    });
+
+});
+
+loadView("dashboard");
