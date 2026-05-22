@@ -2,10 +2,17 @@ import { getCoins } from "./api.js";
 import { renderCoins } from "./ui.js";
 
 const content = document.getElementById("main-content");
+const pageTitle = document.getElementById("page-title");
+const menu = document.querySelector(".menu");
+const appGrid = document.querySelector(".app-grid");
 
 export async function loadView(view) {
 
     if (view === "dashboard") {
+
+        pageTitle.innerHTML = "Dashboard";
+        menu.style.display = "block";
+        appGrid.classList.remove("auth-layout");
 
         content.innerHTML = `
         
@@ -93,6 +100,10 @@ export async function loadView(view) {
 
     if (view === "coins") {
 
+        pageTitle.innerHTML = "Coins";
+        menu.style.display = "block";
+        appGrid.classList.remove("auth-layout");
+
         content.innerHTML = `
         
             <section class="market-section">
@@ -112,7 +123,12 @@ export async function loadView(view) {
 
     }
 
-        if (view === "wallet") {
+    if (view === "wallet") {
+
+        pageTitle.innerHTML = "Wallet";
+        menu.style.display = "block";
+        appGrid.classList.remove("auth-layout");
+        
 
         content.innerHTML = `
 
@@ -168,4 +184,111 @@ export async function loadView(view) {
         renderCoins(coins);
 
     }
+
+    if (view === "account") {
+        menu.style.display = "none";
+        appGrid.classList.add("auth-layout");
+
+        content.innerHTML = `
+
+            <section class="auth-section">
+
+                <div class="auth-card">
+
+                    <h2>Login</h2>
+
+                    <form id="login-form">
+
+                        <input 
+                            type="email"
+                            id="email"
+                            placeholder="Email"
+                            required
+                        >
+
+                        <input 
+                            type="password"
+                            id="password"
+                            placeholder="Password"
+                            required
+                        >
+
+                        <button type="submit">
+                            Login
+                        </button>
+
+                    </form>
+
+                    <p id="login-message"></p>
+
+                </div>
+
+            </section>
+        `;
+
+        const form = document.getElementById("login-form");
+
+        form.addEventListener("submit", async (e) => {
+
+            e.preventDefault();
+
+            const email = document.getElementById("email").value;
+
+            const password = document.getElementById("password").value;
+
+            const message = document.getElementById("login-message");
+
+            try {
+
+                const response = await fetch(
+                    "http://127.0.0.1:8000/auth/login",
+                    {
+                        method: "POST",
+
+                        headers: {
+                            "Content-Type": "application/x-www-form-urlencoded"
+                        },
+
+                        body: new URLSearchParams({
+                            username: email,
+                            password: password
+                        })
+                    }
+                );
+
+                const data = await response.json();
+
+                if (!response.ok) {
+                    throw new Error(data.detail);
+                }
+
+                localStorage.setItem(
+                    "token",
+                    data.access_token
+                );
+
+                message.innerHTML = "Logged in successfully";
+                loadView("dashboard");
+
+            } catch (error) {
+
+                message.innerHTML = error.message;
+
+            }
+
+        });
+
+    }
+
+    const logoutButton = document.getElementById("logout-button");
+
+    logoutButton.addEventListener("click", (e) => {
+
+        e.preventDefault();
+
+        localStorage.removeItem("token");
+
+        loadView("account");
+
+    });
 }

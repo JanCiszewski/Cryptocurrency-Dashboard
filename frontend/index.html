@@ -6,13 +6,14 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Funnel+Sans:ital,wght@0,300..800;1,300..800&family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Josefin+Sans:ital,wght@0,700;1,700&family=Momo+Signature&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
     <title>Cryptocurrency DashBoard</title>
 </head>
 <body>
     <div class="app-grid">
         <header>
-            <h1>DashBoard</h1>
+            <h1 id="page-title"></h1>
 
         </header>
 
@@ -60,82 +61,25 @@
                             <span>Settings</span>
                             </a>
                         </li>
+                        <li>
+                            <a href="#" id="logout-button" class="option-item">
+
+                                <svg viewBox="0 0 24 24">
+                                    <path d="M13 3a1 1 0 0 0 0 2h5v14h-5a1 1 0 0 0 0 2h5a2 2 0 0 0 2-2V5a2 2 0 0 0-2-2Zm-3.707 4.293a1 1 0 0 0-1.414 1.414L10.172 11H3a1 1 0 0 0 0 2h7.172l-2.293 2.293a1 1 0 1 0 1.414 1.414l4-4a1 1 0 0 0 0-1.414Z"/>
+                                </svg>
+
+                                <span>Logout</span>
+
+                            </a>
+                    </li>
                     </ul>
                 </div>
             </div>
-
 
         </aside>
         <div class="content-wrapper">
             <main class="content">
                 <div id="main-content"></div>
-                <!-- <div class="dashboard-top">
-
-                    <div class="balance-card">
-                        <p class="balance-label">TOTAL BALANCE</p>
-                        <h2>$167,312<span>.92</span></h2>
-
-                        <div class="stats">
-                            <div class="stat">
-                                <p>Today</p>
-                                <span class="negative">-2.5%</span>
-                            </div>
-
-                            <div class="stat">
-                                <p>7 Days</p>
-                                <span class="positive">+4.25%</span>
-                            </div>
-
-                            <div class="stat">
-                                <p>30 Days</p>
-                                <span class="positive">+11.5%</span>
-                            </div>
-                        </div>
-                    </div>
-
-                </div>
-
-                <div class="dashboard-grid">
-
-                    <section class="market-section">
-                        <div class="section-title">
-                            <h3>Market Overview</h3>
-                        </div>
-
-                        <div class="cards" id="coins"></div>
-                    </section>
-
-                    <section class="portfolio-section">
-                        <div class="section-title">
-                            <h3>My Portfolio</h3>
-                        </div>
-
-                        <div class="portfolio-list">
-
-                            <div class="portfolio-item">
-                                <span>Bitcoin</span>
-                                <span>37%</span>
-                            </div>
-
-                            <div class="portfolio-item">
-                                <span>Ethereum</span>
-                                <span>20%</span>
-                            </div>
-
-                            <div class="portfolio-item">
-                                <span>Solana</span>
-                                <span>18%</span>
-                            </div>
-
-                            <div class="portfolio-item">
-                                <span>XRP</span>
-                                <span>12%</span>
-                            </div>
-
-                        </div>
-                    </section>
-
-                </div> -->
             </main>
         </div>
     </div>    

@@ -14,4 +14,10 @@ document.querySelectorAll("[data-view]").forEach(link => {
 
 });
 
-loadView("dashboard");
+const token = localStorage.getItem("token");
+
+if (token) {
+    loadView("dashboard");
+} else {
+    loadView("account");
+}
