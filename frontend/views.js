@@ -3,12 +3,16 @@ import { renderCoins } from "./ui.js";
 
 const content = document.getElementById("main-content");
 const pageTitle = document.getElementById("page-title");
+const menu = document.querySelector(".menu");
+const appGrid = document.querySelector(".app-grid");
 
 export async function loadView(view) {
 
     if (view === "dashboard") {
 
         pageTitle.innerHTML = "Dashboard";
+        menu.style.display = "block";
+        appGrid.classList.remove("auth-layout");
 
         content.innerHTML = `
         
@@ -97,6 +101,8 @@ export async function loadView(view) {
     if (view === "coins") {
 
         pageTitle.innerHTML = "Coins";
+        menu.style.display = "block";
+        appGrid.classList.remove("auth-layout");
 
         content.innerHTML = `
         
@@ -120,6 +126,9 @@ export async function loadView(view) {
     if (view === "wallet") {
 
         pageTitle.innerHTML = "Wallet";
+        menu.style.display = "block";
+        appGrid.classList.remove("auth-layout");
+        
 
         content.innerHTML = `
 
@@ -177,8 +186,8 @@ export async function loadView(view) {
     }
 
     if (view === "account") {
-
-        pageTitle.innerHTML = "Account";
+        menu.style.display = "none";
+        appGrid.classList.add("auth-layout");
 
         content.innerHTML = `
 
@@ -270,4 +279,16 @@ export async function loadView(view) {
         });
 
     }
+
+    const logoutButton = document.getElementById("logout-button");
+
+    logoutButton.addEventListener("click", (e) => {
+
+        e.preventDefault();
+
+        localStorage.removeItem("token");
+
+        loadView("account");
+
+    });
 }

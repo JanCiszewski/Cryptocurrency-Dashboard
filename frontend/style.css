@@ -15,12 +15,27 @@ body {
     height: 100dvh;
 }
 
+.app-grid.auth-layout {
+    grid-template-columns: 1fr;
+
+    grid-template-areas:
+        "head"
+        "main";
+}
+
+.app-grid.auth-layout .menu {
+    display: none;
+}
+
+.app-grid.auth-layout header {
+    display: none;
+}
+
 header {
     grid-area: head;
     display: flex;
     align-items: center;
     justify-content: space-between;
-    color: #FFA825;
     margin-left: 2rem;
 }
 
@@ -299,7 +314,7 @@ header {
     display: flex;
     justify-content: center;
     align-items: center;
-    min-height: 70vh;
+    min-height: 100vh;
 }
 
 .auth-card {
@@ -353,4 +368,75 @@ header {
     color: white;
     margin-top: 1rem;
     text-align: center;
+}
+
+.coin-modal {
+    position: fixed;
+    inset: 0;
+    background-color: rgba(0, 0, 0, 0.7);
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    z-index: 999;
+}
+
+.coin-modal-content {
+    background: linear-gradient(145deg, #242424, #1a1a1a);
+
+    width: 400px;
+
+    border-radius: 25px;
+
+    padding: 2rem;
+
+    color: white;
+
+    position: relative;
+}
+
+.coin-modal-content h2 {
+    margin-bottom: 1.5rem;
+    color: #FFA825;
+}
+
+.coin-modal-content p {
+    margin-bottom: 1rem;
+    font-size: 1.1rem;
+}
+
+.close-modal {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    background: none;
+    border: none;
+    color: white;
+    font-size: 1.2rem;
+    cursor: pointer;
+}
+
+.buy-button {
+    width: 100%;
+    margin-top: 2rem;
+    padding: 1rem;
+    border: none;
+    border-radius: 15px;
+    background-color: #FFA825;
+    color: black;
+    font-size: 1rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.buy-button:hover {
+    opacity: 0.8;
+}
+
+.payment-message {
+    margin-top: 1rem;
+    text-align: center;
+    color: #2ecc71;
 }
