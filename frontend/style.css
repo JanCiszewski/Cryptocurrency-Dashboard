@@ -120,12 +120,6 @@ header {
     min-height: 90vh;
 }
 
-.cards {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 1rem;
-}
-
 .balance {
     color: #c7c3c3;
 }
@@ -133,13 +127,6 @@ header {
 .balance span {
     color: #ffaf36;
     font-size: 2rem;
-}
-
-.card {
-    background-color: #1f1f1f;
-    color: white;
-    padding: 1rem;
-    border-radius: 20px;
 }
 
 .card img {
@@ -317,13 +304,6 @@ header {
     min-height: 100vh;
 }
 
-.auth-card {
-    width: 400px;
-    background: linear-gradient(145deg, #242424, #1a1a1a);
-    padding: 2rem;
-    border-radius: 25px;
-}
-
 .auth-card h2 {
     color: white;
     margin-bottom: 2rem;
@@ -349,50 +329,30 @@ header {
     outline: 1px solid #FFA825;
 }
 
-.auth-card button {
-    background-color: #FFA825;
-    border: none;
-    border-radius: 15px;
-    padding: 1rem;
-    font-size: 1rem;
-    font-weight: bold;
-    cursor: pointer;
-    transition: 0.3s;
-}
-
-.auth-card button:hover {
-    opacity: 0.8;
-}
-
 #login-message {
-    color: white;
+    min-height: 24px;
     margin-top: 1rem;
     text-align: center;
+    color: #FFA825;
+    font-weight: 600;
 }
 
 .coin-modal {
     position: fixed;
     inset: 0;
     background-color: rgba(0, 0, 0, 0.7);
-
     display: flex;
     justify-content: center;
     align-items: center;
-
     z-index: 999;
 }
 
 .coin-modal-content {
     background: linear-gradient(145deg, #242424, #1a1a1a);
-
     width: 400px;
-
     border-radius: 25px;
-
     padding: 2rem;
-
     color: white;
-
     position: relative;
 }
 
@@ -439,4 +399,244 @@ header {
     margin-top: 1rem;
     text-align: center;
     color: #2ecc71;
+}
+
+.auth-tabs {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 2rem;
+}
+
+.auth-tab {
+    flex: 1;
+    background-color: transparent;
+    border: 2px solid #FFA825;
+    color: #FFA825;
+    padding: 1rem;
+    border-radius: 15px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: 0.3s;
+
+}
+
+.auth-tab:hover {
+    background-color: #2a2a2a;
+}
+
+.auth-tab.active {
+    background-color: #FFA825;
+    color: black;
+}
+
+.auth-card {
+    position: relative;
+    overflow: hidden;
+    width: 400px;
+    background: linear-gradient(145deg, #242424, #1a1a1a);
+    padding: 2rem;
+    border-radius: 25px;
+}
+
+.auth-card::before {
+    content: "";
+    position: absolute;
+    inset: -100px;
+    background: radial-gradient(circle, rgba(255,168,37,0.12), transparent 70%);
+    z-index: 0;
+}
+
+.auth-card * {
+    position: relative;
+    z-index: 1;
+}
+
+.auth-card h2 {
+    font-size: 2rem;
+    letter-spacing: 1px;
+}
+
+.auth-card input {
+    transition: 0.3s;
+}
+
+.auth-card input:focus {
+    transform: translateY(-2px);
+}
+
+#auth-button {
+    background-color: #FFA825;
+    border: none;
+    border-radius: 15px;
+    padding: 1rem;
+    font-size: 1rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.3s;
+    color: black;
+}
+
+#auth-button:hover {
+    opacity: 0.8;
+}
+
+.account-section {
+    display: flex;
+    justify-content: flex-start;
+    align-items: flex-start;
+    padding-top: 3rem;
+    padding-left: 3rem;
+    min-height: 80vh;
+}
+
+.account-card {
+    width: 500px;
+    background:linear-gradient(145deg,#242424,#1a1a1a);
+    border-radius: 30px;
+    padding: 3rem;
+    box-shadow: 0 0 40px rgba(0,0,0,0.4);
+    position: relative;
+    overflow: hidden;
+}
+
+.account-card::before {
+    content: "";
+    position: absolute;
+    inset: -150px;
+    background:
+        radial-gradient(
+            circle,
+            rgba(255,168,37,0.12),
+            transparent 70%
+        );
+    z-index: 0;
+}
+
+.account-card * {
+    position: relative;
+    z-index: 1;
+}
+
+.account-header {
+    margin-bottom: 2.5rem;
+}
+
+.account-header h2 {
+    font-size: 2.5rem;
+    color: white;
+    margin-bottom: 0.5rem;
+}
+
+.account-header p {
+    color: #8f8f8f;
+}
+
+.account-info {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.account-item {
+    background-color: #1f1f1f;
+    border-radius: 18px;
+    padding: 1.2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.account-item span {
+    color: #8f8f8f;
+}
+
+.account-item strong {
+    color: white;
+    font-size: 1.1rem;
+}
+
+#edit-account-btn {
+    margin-top: 2rem;
+    width: 100%;
+    background-color: #FFA825;
+    border: none;
+    border-radius: 18px;
+    padding: 1rem;
+    font-size: 1rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+#edit-account-btn:hover {
+    opacity: 0.85;
+}
+
+.profile-modal {
+    position: fixed;
+    inset: 0;
+    background-color: rgba(0,0,0,0.6);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 999;
+}
+
+.profile-modal-content {
+    width: 400px;
+    background:
+        linear-gradient(
+            145deg,
+            #242424,
+            #1a1a1a
+        );
+    border-radius: 25px;
+    padding: 2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    color: white;
+    position: relative;
+    box-sizing: border-box;
+}
+
+.profile-modal-content input {
+    width: 100%;
+    background-color: #1f1f1f;
+    border: none;
+    border-radius: 12px;
+    padding: 1rem;
+    color: white;
+    font-size: 1rem;
+    margin-top: 1rem;
+}
+
+.profile-modal-content h2 {
+    text-align: center;
+}
+
+.profile-modal-content input:focus {
+    outline: 2px solid #FFA825;
+}
+
+#save-profile {
+    width: 100%;
+    margin-top: 1.5rem;
+    background-color: #FFA825;
+    border: none;
+    border-radius: 12px;
+    padding: 1rem;
+    font-size: 1rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+#save-profile:hover {
+    opacity: 0.85;
+}
+
+.profile-modal-content * {
+    box-sizing: border-box;
 }

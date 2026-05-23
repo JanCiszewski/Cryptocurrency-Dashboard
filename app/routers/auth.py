@@ -1,6 +1,6 @@
 from fastapi import APIRouter, HTTPException, Depends
 from fastapi.security import OAuth2PasswordRequestForm
-from app.schemas.user import UserCreate, UserResponse, TokenResponse
+from app.schemas.user import UserCreate, UserResponse, TokenResponse, UserUpdate
 from app.services.auth_service import (
     hash_password,
     verify_password,
@@ -11,6 +11,7 @@ from app.services.auth_service import (
 from sqlalchemy.orm import Session
 from app.database import get_db
 from app.models.user import User
+import json
 
 
 router = APIRouter(prefix="/auth", tags=["Auth"])
@@ -40,7 +41,9 @@ async def register(
     new_user = User(
         username=user.username,
         email=user.email,
-        password=hashed_pw
+        password=hashed_pw,
+        balance=0,
+        coins="[]"
     )
 
     db.add(new_user)
@@ -50,7 +53,9 @@ async def register(
     return {
         "id": new_user.id,
         "username": new_user.username,
-        "email": new_user.email
+        "email": new_user.email,
+        "balance": new_user.balance,
+        "coins": []
     }
 
 # ======================
@@ -114,5 +119,42 @@ async def get_me(
     return {
         "id": user.id,
         "username": user.username,
-        "email": user.email
+        "email": user.email,
+        "balance": user.balance,
+        "coins": json.loads(user.coins)
+    }
+
+# ======================
+# UPDATE USER
+# ======================
+@router.put("/update")
+async def update_user(
+    user_data: UserUpdate,
+    token: str = Depends(oauth2_scheme),
+    db: Session = Depends(get_db)
+):
+
+    email = verify_token(token)
+
+    user = db.query(User).filter(
+        User.email == email
+    ).first()
+
+    if not user:
+        raise HTTPException(
+            status_code=404,
+            detail="User not found"
+        )
+
+    user.username = user_data.username
+    user.email = user_data.email
+    if user_data.password.strip() != "":
+        user.password = hash_password(
+        user_data.password
+    )
+
+    db.commit()
+
+    return {
+        "message": "Account updated"
     }
