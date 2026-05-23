@@ -1,4 +1,4 @@
-import { getCoins } from "./api.js";
+import { getCoins, getMe } from "./api.js";
 import { renderCoins } from "./ui.js";
 
 const content = document.getElementById("main-content");
@@ -21,7 +21,7 @@ export async function loadView(view) {
                 <div class="balance-card">
                     <p class="balance-label">TOTAL BALANCE</p>
 
-                    <h2>$167,312<span>.92</span></h2>
+                    <h2 id="dashboard-balance">$0</h2>
 
                     <div class="stats">
 
@@ -63,29 +63,7 @@ export async function loadView(view) {
                         <h3>My Portfolio</h3>
                     </div>
 
-                    <div class="portfolio-list">
-
-                        <div class="portfolio-item">
-                            <span>Bitcoin</span>
-                            <span>37%</span>
-                        </div>
-
-                        <div class="portfolio-item">
-                            <span>Ethereum</span>
-                            <span>20%</span>
-                        </div>
-
-                        <div class="portfolio-item">
-                            <span>Solana</span>
-                            <span>18%</span>
-                        </div>
-
-                        <div class="portfolio-item">
-                            <span>XRP</span>
-                            <span>12%</span>
-                        </div>
-
-                    </div>
+                    <div class="portfolio-list" id="portfolio-list"></div>
 
                 </section>
 
@@ -93,8 +71,30 @@ export async function loadView(view) {
         `;
 
         const coins = await getCoins();
+        const user = await getMe();
+        const balanceElement = document.getElementById("dashboard-balance");
+        balanceElement.innerHTML = `$${user.balance.toLocaleString()}`;
+        const portfolioList = document.getElementById("portfolio-list");
+        portfolioList.innerHTML = "";
+        user.coins.forEach((coin) => {
+        portfolioList.innerHTML += `
 
-        renderCoins(coins);
+            <div class="portfolio-item">
+
+                <span>
+                    ${coin.id}
+                </span>
+
+                <span>
+                    ${coin.amount.toFixed(2)}
+                </span>
+
+            </div>
+
+        `;
+
+});
+        renderCoins(coins, user);
 
     }
 
@@ -118,8 +118,8 @@ export async function loadView(view) {
         `;
 
         const coins = await getCoins();
-
-        renderCoins(coins, true);
+        const user = await getMe();
+        renderCoins(coins,null,true);
 
     }
 
@@ -144,7 +144,7 @@ export async function loadView(view) {
 
                         <h4>Total Assets</h4>
 
-                        <p class="wallet-balance">$167,312</p>
+                        <p class="wallet-balance" id="wallet-assets">$0</p>
 
                     </div>
 
@@ -152,7 +152,7 @@ export async function loadView(view) {
 
                         <h4>Top Holding</h4>
 
-                        <p class="wallet-coin">Bitcoin</p>
+                        <p class="wallet-coin" id="top-coin">-</p>
 
                     </div>
 
@@ -176,82 +176,325 @@ export async function loadView(view) {
 
                 </div>
 
-            </section>
-        `;
+            </section>`;
 
         const coins = await getCoins();
+        const user = await getMe();
+        const walletAssets =
+        document.getElementById("wallet-assets");
+        let totalAssets = 0;
+        user.coins.forEach(userCoin => {
+        const matchingCoin = coins.find(coin => coin.id === userCoin.id);
 
-        renderCoins(coins);
+        if (matchingCoin) {
+            totalAssets += matchingCoin.price * userCoin.amount;
+        }
 
+        });
+
+        walletAssets.innerHTML =
+            `$${totalAssets.toLocaleString(
+                undefined,
+                {
+                    maximumFractionDigits: 2
+                }
+            )}`;
+
+        const topCoin = document.getElementById("top-coin");
+        if (user.coins.length > 0) {
+
+            topCoin.innerHTML =
+                user.coins[0].id;
+
+        }
+
+        renderCoins(coins, user);
     }
 
     if (view === "account") {
-        menu.style.display = "none";
-        appGrid.classList.add("auth-layout");
 
+    const token = localStorage.getItem("token");
+    if (token) {
+        pageTitle.innerHTML = "Account";
+        const user = await getMe();
         content.innerHTML = `
 
-            <section class="auth-section">
+        <section class="account-section">
 
-                <div class="auth-card">
+            <div class="account-card">
 
-                    <h2>Login</h2>
+                <div class="account-header">
 
-                    <form id="login-form">
+                    <h2>My Account</h2>
 
-                        <input 
-                            type="email"
-                            id="email"
-                            placeholder="Email"
-                            required
-                        >
-
-                        <input 
-                            type="password"
-                            id="password"
-                            placeholder="Password"
-                            required
-                        >
-
-                        <button type="submit">
-                            Login
-                        </button>
-
-                    </form>
-
-                    <p id="login-message"></p>
+                    <p>
+                        Manage your profile
+                    </p>
 
                 </div>
 
-            </section>
+                <div class="account-info">
+
+                    <div class="account-item">
+
+                        <span>Username</span>
+
+                        <strong>
+                            ${user.username}
+                        </strong>
+
+                    </div>
+
+                    <div class="account-item">
+                        <span>Email</span>
+                        <strong>
+                            ${user.email}
+                        </strong>
+                    </div>
+
+                    <div class="account-item">
+                        <span>Available Balance</span>
+                        <strong>
+                            $${user.balance}
+                        </strong>
+                    </div>
+
+                </div>
+
+                <button id="edit-account-btn">Edit Profile</button>
+
+            </div>
+
+        </section>`;
+
+        const editButton =
+    document.getElementById(
+        "edit-account-btn"
+    );
+
+editButton.addEventListener(
+    "click",
+    () => {
+
+        const modal =
+            document.createElement("div");
+
+        modal.classList.add(
+            "profile-modal"
+        );
+
+        modal.innerHTML = `
+
+            <div class="profile-modal-content">
+
+                <button class="close-modal">
+                    ✕
+                </button>
+
+                <h2>Edit Profile</h2>
+                <input type="text" id="edit-username" value="${user.username}" placeholder="Username">
+                <input type="email" id="edit-email" value="${user.email}" placeholder="Email">
+                <input type="password" id="edit-password" placeholder="New password">
+                <button id="save-profile">Save Changes</button>
+            </div>
         `;
 
-        const form = document.getElementById("login-form");
+        document.body.appendChild(modal);
 
-        form.addEventListener("submit", async (e) => {
+        modal.querySelector(
+            ".close-modal"
+        ).addEventListener(
+            "click",
+            () => modal.remove()
+        );
 
-            e.preventDefault();
+        modal.querySelector(
+            "#save-profile"
+        ).addEventListener(
+            "click",
+            async () => {
 
-            const email = document.getElementById("email").value;
+                const username =
+                    document.getElementById(
+                        "edit-username"
+                    ).value;
 
-            const password = document.getElementById("password").value;
+                const email =
+                    document.getElementById(
+                        "edit-email"
+                    ).value;
+                const password =
+                    document.getElementById(
+                        "edit-password"
+                    ).value;
 
-            const message = document.getElementById("login-message");
+                await fetch(
+                    "http://127.0.0.1:8000/auth/update",
+                    {
+                        method: "PUT",
 
-            try {
+                        headers: {
+                            "Content-Type":
+                                "application/json",
+
+                            "Authorization":
+                                `Bearer ${token}`
+                        },
+
+                        body: JSON.stringify({
+                            username,
+                            email,
+                            password
+                        })
+                    }
+                );
+
+                modal.remove();
+
+                loadView("account");
+
+            }
+        );
+
+    }
+);
+
+        return;
+    }
+
+
+
+    
+    menu.style.display = "none";
+    appGrid.classList.add("auth-layout");
+    content.innerHTML = `
+
+        <section class="auth-section">
+
+            <div class="auth-card">
+
+                <div class="auth-tabs">
+
+                    <button
+                        id="login-tab"
+                        class="auth-tab active"
+                    >
+                        Login
+                    </button>
+
+                    <button
+                        id="register-tab"
+                        class="auth-tab"
+                    >
+                        Register
+                    </button>
+
+                </div>
+
+                <h2 id="auth-title">
+                    Login
+                </h2>
+
+                <form id="auth-form">
+
+                    <input
+                        type="text"
+                        id="username"
+                        placeholder="Username"
+                        style="display: none;"
+                    >
+
+                    <input
+                        type="email"
+                        id="email"
+                        placeholder="Email"
+                        required
+                    >
+
+                    <input
+                        type="password"
+                        id="password"
+                        placeholder="Password"
+                        required
+                    >
+
+                    <button type="submit" id="auth-button">
+                        Login
+                    </button>
+
+                </form>
+
+                <p id="login-message"></p>
+
+            </div>
+
+        </section>
+    `;
+
+    let isRegisterMode = false;
+    const loginTab = document.getElementById("login-tab");
+    const registerTab = document.getElementById("register-tab");
+    const usernameInput = document.getElementById("username");
+    const authTitle = document.getElementById("auth-title");
+    const authButton = document.getElementById("auth-button");
+
+    loginTab.addEventListener("click", () => {
+
+        isRegisterMode = false;
+        usernameInput.style.display = "none";
+        authTitle.innerHTML = "Login";
+        authButton.innerHTML = "Login";
+        loginTab.classList.add("active");
+        registerTab.classList.remove("active");
+
+    });
+
+    registerTab.addEventListener("click", () => {
+
+        isRegisterMode = true;
+        usernameInput.style.display = "block";
+        authTitle.innerHTML = "Register";
+        authButton.innerHTML = "Register";
+        registerTab.classList.add("active");
+        loginTab.classList.remove("active");
+
+    });
+
+    const form = document.getElementById("auth-form");
+
+    form.addEventListener("submit", async (e) => {
+
+        e.preventDefault();
+
+        const email =
+            document.getElementById("email").value;
+
+        const password =
+            document.getElementById("password").value;
+
+        const message =
+            document.getElementById("login-message");
+
+        try {
+
+            if (isRegisterMode) {
+
+                const username =
+                    document.getElementById("username").value;
 
                 const response = await fetch(
-                    "http://127.0.0.1:8000/auth/login",
+                    "http://127.0.0.1:8000/auth/register",
                     {
                         method: "POST",
 
                         headers: {
-                            "Content-Type": "application/x-www-form-urlencoded"
+                            "Content-Type": "application/json"
                         },
 
-                        body: new URLSearchParams({
-                            username: email,
-                            password: password
+                        body: JSON.stringify({
+                            username,
+                            email,
+                            password
                         })
                     }
                 );
@@ -262,33 +505,63 @@ export async function loadView(view) {
                     throw new Error(data.detail);
                 }
 
-                localStorage.setItem(
-                    "token",
-                    data.access_token
-                );
+                message.innerHTML =
+                    "Account created successfully";
 
-                message.innerHTML = "Logged in successfully";
-                loadView("dashboard");
-
-            } catch (error) {
-
-                message.innerHTML = error.message;
-
+                return;
             }
 
-        });
+            const response = await fetch(
+                "http://127.0.0.1:8000/auth/login",
+                {
+                    method: "POST",
 
-    }
+                    headers: {
+                        "Content-Type":
+                            "application/x-www-form-urlencoded"
+                    },
 
-    const logoutButton = document.getElementById("logout-button");
+                    body: new URLSearchParams({
+                        username: email,
+                        password: password
+                    })
+                }
+            );
 
-    logoutButton.addEventListener("click", (e) => {
+            const data = await response.json();
 
-        e.preventDefault();
+            if (!response.ok) {
+                throw new Error(data.detail);
+            }
 
-        localStorage.removeItem("token");
+            localStorage.setItem(
+                "token",
+                data.access_token
+            );
 
-        loadView("account");
+            message.innerHTML =
+                "Logged in successfully";
+
+            loadView("dashboard");
+
+        } catch (error) {
+
+            message.innerHTML = error.message;
+
+        }
 
     });
+
+}
+
+  const logoutButton = document.querySelector('[data-view="logout"]');
+
+    if (logoutButton) {
+        logoutButton.addEventListener("click", (e) => {
+                e.preventDefault();
+                localStorage.removeItem("token");
+                loadView("account");
+            }
+        );
+    }
 }

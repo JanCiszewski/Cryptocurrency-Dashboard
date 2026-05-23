@@ -75,7 +75,7 @@ function showCoinModal(coin) {
     buyButton.addEventListener("click", async () => {
 
         try {
-
+            paymentMessage.innerHTML = "Redirecting to PayU...";
             const response = await fetch(
                 `http://127.0.0.1:8000/payments/create?amount=${coin.price}`,
                 {
@@ -86,7 +86,7 @@ function showCoinModal(coin) {
             const data = await response.json();
 
             setTimeout(() => {
-                window.open(data.redirect_url, "_blank");
+                window.location.href = data.redirect_url;
             }, 1500);
 
         } catch (error) {
@@ -101,26 +101,20 @@ function showCoinModal(coin) {
 
 }
 
-export function renderCoins(coins, showAll = false) {
+export function renderCoins(coins, user, showAll = false) {
 
     const container = document.getElementById("coins");
-
     container.innerHTML = "";
-
     let coinsToRender = coins;
+    if (user) {
+
+        const userCoins = user.coins;
+        const userCoinIds = userCoins.map(coin => coin.id);
+        coinsToRender = coins.filter(coin => userCoinIds.includes(coin.id));
+    }
 
     if (!showAll) {
-
-        const featuredCoins = [
-            "bitcoin",
-            "ethereum",
-            "solana",
-            "ripple"
-        ];
-
-        coinsToRender = coins.filter(coin =>
-            featuredCoins.includes(coin.id)
-        );
+        coinsToRender = coinsToRender.slice(0, 4);
     }
 
     coinsToRender.forEach(coin => {

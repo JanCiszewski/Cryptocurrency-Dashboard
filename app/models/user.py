@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String
+from sqlalchemy import Column, Integer, String, Float
 from app.database import Base
 
 
@@ -12,3 +12,7 @@ class User(Base):
     email = Column(String, unique=True, index=True)
 
     password = Column(String)
+
+    balance = Column(Float, default=10000)
+
+    coins = Column(String, default="[]")
