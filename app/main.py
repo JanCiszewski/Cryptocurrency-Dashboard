@@ -2,11 +2,12 @@ from fastapi import FastAPI
 from app.routers import coins, auth, demo
 from app.routers import coins, auth, demo, favorites
 from app.routers import coins, auth, demo, favorites, payments
-
+from app.database import engine, Base
+from app.models.user import User
 from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI(title="Crypto Dashboard API")
-
+Base.metadata.create_all(bind=engine)
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
