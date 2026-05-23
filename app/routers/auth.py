@@ -8,8 +8,10 @@ from app.services.auth_service import (
     verify_token,
     oauth2_scheme
 )
+from sqlalchemy.orm import Session
+from app.database import get_db
+from app.models.user import User
 
-fake_users_db = []
 
 router = APIRouter(prefix="/auth", tags=["Auth"])
 
@@ -17,49 +19,70 @@ router = APIRouter(prefix="/auth", tags=["Auth"])
 # REGISTER
 # ======================
 @router.post("/register", response_model=UserResponse)
-async def register(user: UserCreate):
+async def register(
+    user: UserCreate,
+    db: Session = Depends(get_db)
+):
 
-    for u in fake_users_db:
-        if u["email"] == user.email:
-            raise HTTPException(status_code=400, detail="User already exists")
+    # sprawdzenie czy email istnieje
+    existing_user = db.query(User).filter(
+        User.email == user.email
+    ).first()
 
-    new_user = {
-        "id": len(fake_users_db) + 1,
-        "username": user.username,
-        "email": user.email,
-        "password": hash_password(user.password)
-    }
+    if existing_user:
+        raise HTTPException(
+            status_code=400,
+            detail="User already exists"
+        )
 
-    fake_users_db.append(new_user)
+    hashed_pw = hash_password(user.password)
+
+    new_user = User(
+        username=user.username,
+        email=user.email,
+        password=hashed_pw
+    )
+
+    db.add(new_user)
+    db.commit()
+    db.refresh(new_user)
 
     return {
-        "id": new_user["id"],
-        "username": new_user["username"],
-        "email": new_user["email"]
+        "id": new_user.id,
+        "username": new_user.username,
+        "email": new_user.email
     }
-
 
 # ======================
 # LOGIN
 # ======================
 @router.post("/login", response_model=TokenResponse)
-async def login(form_data: OAuth2PasswordRequestForm = Depends()):
+async def login(
+    form_data: OAuth2PasswordRequestForm = Depends(),
+    db: Session = Depends(get_db)
+):
 
-    db_user = None
-
-    for u in fake_users_db:
-        if u["email"] == form_data.username:
-            db_user = u
-            break
+    db_user = db.query(User).filter(
+        User.email == form_data.username
+    ).first()
 
     if not db_user:
-        raise HTTPException(status_code=401, detail="Invalid credentials")
+        raise HTTPException(
+            status_code=401,
+            detail="Invalid credentials"
+        )
 
-    if not verify_password(form_data.password, db_user["password"]):
-        raise HTTPException(status_code=401, detail="Invalid credentials")
+    if not verify_password(
+        form_data.password,
+        db_user.password
+    ):
+        raise HTTPException(
+            status_code=401,
+            detail="Invalid credentials"
+        )
 
     token = create_access_token(
-        data={"sub": db_user["email"]}
+        data={"sub": db_user.email}
     )
 
     return {
@@ -67,21 +90,29 @@ async def login(form_data: OAuth2PasswordRequestForm = Depends()):
         "token_type": "bearer"
     }
 
-
 # ======================
 # ME (protected)
 # ======================
 @router.get("/me", response_model=UserResponse)
-async def get_me(token: str = Depends(oauth2_scheme)):
+async def get_me(
+    token: str = Depends(oauth2_scheme),
+    db: Session = Depends(get_db)
+):
 
     email = verify_token(token)
 
-    for user in fake_users_db:
-        if user["email"] == email:
-            return {
-                "id": user["id"],
-                "username": user["username"],
-                "email": user["email"]
-            }
+    user = db.query(User).filter(
+        User.email == email
+    ).first()
 
-    raise HTTPException(status_code=404, detail="User not found")
+    if not user:
+        raise HTTPException(
+            status_code=404,
+            detail="User not found"
+        )
+
+    return {
+        "id": user.id,
+        "username": user.username,
+        "email": user.email
+    }
